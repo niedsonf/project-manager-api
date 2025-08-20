@@ -14,8 +14,8 @@ export class UsersRepositoryService
     super(UserEntity, dataSource.createEntityManager());
   }
 
-  findById(id: number): Promise<IUser | null> {
-    return this.findById(id);
+  findById(id: number): Promise<IUser> {
+    return this.findOneByOrFail({ id });
   }
   add(payload: DeepPartial<IUser>): Promise<IUser> {
     return this.save(payload);
