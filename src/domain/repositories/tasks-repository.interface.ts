@@ -3,7 +3,7 @@ import { ITask } from '../interfaces/task.interface';
 
 export interface ITasksRepository {
   findAll(userId: number): Promise<ITask[]>;
-  findById(id: number): Promise<ITask | null>;
+  findById(userId: number, id: number): Promise<ITask>;
   add(payload: DeepPartial<ITask>): Promise<ITask>;
   updateById(id: number, payload: DeepPartial<ITask>);
 }

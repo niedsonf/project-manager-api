@@ -17,8 +17,8 @@ export class TasksRepositoryService
   findAll(userId: number): Promise<ITask[]> {
     return this.findBy({ user: { id: userId } });
   }
-  findById(id: number): Promise<ITask | null> {
-    return this.findOneBy({ id });
+  findById(userId: number, id: number): Promise<ITask> {
+    return this.findOneByOrFail({ id, user: { id: userId } });
   }
   add(payload: DeepPartial<ITask>): Promise<ITask> {
     return this.save(payload);

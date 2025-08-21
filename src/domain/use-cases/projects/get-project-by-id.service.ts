@@ -22,10 +22,6 @@ export class GetProjectByIdService implements BaseUseCase {
       payload.projectId,
     );
 
-    if (!project) {
-      throw new Error('Erro ao recuperar projeto');
-    }
-
     return project;
   }
 }
