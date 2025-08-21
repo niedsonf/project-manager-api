@@ -3,6 +3,7 @@ import { ITask } from 'src/domain/interfaces/task.interface';
 import type { IUser } from 'src/domain/interfaces/user.interface';
 import {
   Column,
+  Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -11,6 +12,7 @@ import {
 import { TaskEntity } from './task.entity';
 import { UserEntity } from './user.entity';
 
+@Entity('project')
 export class ProjectEntity implements IProject {
   @PrimaryGeneratedColumn()
   id: number;

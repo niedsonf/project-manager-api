@@ -3,7 +3,7 @@ import { DeepPartial, Repository } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { IUsersRepository } from 'src/domain/repositories/users-repository.interface';
 import { IUser } from 'src/domain/interfaces/user.interface';
-import { DataSource } from 'typeorm/browser';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class UsersRepositoryService

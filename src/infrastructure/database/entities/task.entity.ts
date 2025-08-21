@@ -1,10 +1,17 @@
 import type { IProject } from 'src/domain/interfaces/project.interface';
 import { ITask } from 'src/domain/interfaces/task.interface';
 import type { IUser } from 'src/domain/interfaces/user.interface';
-import { Column, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ProjectEntity } from './project.entity';
 import { UserEntity } from './user.entity';
 
+@Entity('task')
 export class TaskEntity implements ITask {
   @PrimaryGeneratedColumn()
   id: number;
