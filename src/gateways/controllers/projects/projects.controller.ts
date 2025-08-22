@@ -14,8 +14,6 @@ import { GetAllProjectsService } from 'src/domain/use-cases/projects/get-all-pro
 import { GetProjectByIdService } from 'src/domain/use-cases/projects/get-project-by-id.service';
 import { IProject } from 'src/domain/interfaces/project.interface';
 
-const loggedUser = 1;
-
 @Controller('projects')
 export class ProjectsController {
   constructor(
@@ -25,9 +23,10 @@ export class ProjectsController {
   ) {}
 
   @Get()
-  findAll(): Promise<IProject[]> {
+  findAll(@Req() request): Promise<IProject[]> {
     try {
-      return this.getAllProjectsUseCase.execute(loggedUser);
+      const loggedUser = request.user;
+      return this.getAllProjectsUseCase.execute(loggedUser.sub);
     } catch (error) {
       throw new NotFoundException(error);
     }
@@ -36,9 +35,10 @@ export class ProjectsController {
   @Get(':id')
   find(@Req() request, @Param('id') id: number): Promise<IProject> {
     try {
+      const loggedUser = request.user;
       return this.getProjectByIdUseCase.execute({
         projectId: id,
-        userId: loggedUser,
+        userId: loggedUser.sub,
       });
     } catch (error) {
       throw new NotFoundException(error);
@@ -48,9 +48,10 @@ export class ProjectsController {
   @Post()
   create(@Req() request, @Body() createProjectDTO: CreateProjectDTO) {
     try {
+      const loggedUser = request.user;
       return this.createProjectUseCase.execute({
         project: createProjectDTO,
-        userId: loggedUser,
+        userId: loggedUser.sub,
       });
     } catch (error) {
       throw new UnprocessableEntityException(error);

@@ -13,8 +13,6 @@ import { GetAllTasksService } from 'src/domain/use-cases/tasks/get-all-tasks.ser
 import { GetTaskByIdService } from 'src/domain/use-cases/tasks/get-task-by-id.service';
 import { CreateTaskDTO } from './dtos/create-task.dto';
 
-const loggedUser = 1;
-
 @Controller('tasks')
 export class TasksController {
   constructor(
@@ -24,9 +22,10 @@ export class TasksController {
   ) {}
 
   @Get()
-  findAll() {
+  findAll(@Req request) {
     try {
-      return this.getAllTasksUseCase.execute({ userId: loggedUser });
+      const loggedUser = request.user;
+      return this.getAllTasksUseCase.execute({ userId: loggedUser.sub });
     } catch (error) {
       throw new NotFoundException(error);
     }
@@ -35,7 +34,11 @@ export class TasksController {
   @Get(':id')
   findById(@Req() request, @Param('id') taskId: number) {
     try {
-      return this.getTaskByIdUseCase.execute({ taskId, userId: loggedUser });
+      const loggedUser = request.user;
+      return this.getTaskByIdUseCase.execute({
+        taskId,
+        userId: loggedUser.sub,
+      });
     } catch (error) {
       throw new NotFoundException(error);
     }
@@ -44,9 +47,10 @@ export class TasksController {
   @Post()
   create(@Req() request, @Body() createTaskDTO: CreateTaskDTO) {
     try {
+      const loggedUser = request.user;
       return this.createTaskUseCase.execute({
         task: createTaskDTO,
-        userId: loggedUser,
+        userId: loggedUser.sub,
       });
     } catch (error) {
       throw new UnprocessableEntityException(error);

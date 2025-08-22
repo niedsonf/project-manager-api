@@ -4,10 +4,17 @@ import { AppService } from './app.service';
 import { DomainModule } from './domain/domain.module';
 import { InfrastructureModule } from './infrastructure/infrastructure.module';
 import { GatewaysModule } from './gateways/gateways.module';
+import { AuthGuard } from './gateways/guards/auth-guard/auth.guard';
 
 @Module({
   imports: [DomainModule, InfrastructureModule, GatewaysModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'APP_GUARD',
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}
