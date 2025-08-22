@@ -11,5 +11,6 @@ import { DatabaseModule } from 'src/infrastructure/database/database.module';
     GetProjectByIdService,
     CreateProjectService,
   ],
+  exports: [GetAllProjectsService, GetProjectByIdService, CreateProjectService],
 })
 export class ProjectsModule {}

@@ -13,5 +13,11 @@ import { DatabaseModule } from 'src/infrastructure/database/database.module';
     CreateTaskService,
     UpdateTaskService,
   ],
+  exports: [
+    GetAllTasksService,
+    GetTaskByIdService,
+    CreateTaskService,
+    UpdateTaskService,
+  ],
 })
 export class TasksModule {}
