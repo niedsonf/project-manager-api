@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   Body,
   Controller,
@@ -13,6 +14,7 @@ import { CreateProjectService } from 'src/domain/use-cases/projects/create-proje
 import { GetAllProjectsService } from 'src/domain/use-cases/projects/get-all-projects.service';
 import { GetProjectByIdService } from 'src/domain/use-cases/projects/get-project-by-id.service';
 import { IProject } from 'src/domain/interfaces/project.interface';
+import { jwtSchema } from 'src/infrastructure/auth/constants';
 
 @Controller('projects')
 export class ProjectsController {
@@ -25,7 +27,7 @@ export class ProjectsController {
   @Get()
   findAll(@Req() request): Promise<IProject[]> {
     try {
-      const loggedUser = request.user;
+      const loggedUser = request.user as jwtSchema;
       return this.getAllProjectsUseCase.execute(loggedUser.sub);
     } catch (error) {
       throw new NotFoundException(error);
@@ -35,7 +37,7 @@ export class ProjectsController {
   @Get(':id')
   find(@Req() request, @Param('id') id: number): Promise<IProject> {
     try {
-      const loggedUser = request.user;
+      const loggedUser = request.user as jwtSchema;
       return this.getProjectByIdUseCase.execute({
         projectId: id,
         userId: loggedUser.sub,
@@ -48,7 +50,7 @@ export class ProjectsController {
   @Post()
   create(@Req() request, @Body() createProjectDTO: CreateProjectDTO) {
     try {
-      const loggedUser = request.user;
+      const loggedUser = request.user as jwtSchema;
       return this.createProjectUseCase.execute({
         project: createProjectDTO,
         userId: loggedUser.sub,

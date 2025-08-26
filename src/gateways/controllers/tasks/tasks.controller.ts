@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   Body,
   Controller,
@@ -12,6 +13,7 @@ import { CreateTaskService } from 'src/domain/use-cases/tasks/create-task.servic
 import { GetAllTasksService } from 'src/domain/use-cases/tasks/get-all-tasks.service';
 import { GetTaskByIdService } from 'src/domain/use-cases/tasks/get-task-by-id.service';
 import { CreateTaskDTO } from './dtos/create-task.dto';
+import { jwtSchema } from 'src/infrastructure/auth/constants';
 
 @Controller('tasks')
 export class TasksController {
@@ -22,9 +24,9 @@ export class TasksController {
   ) {}
 
   @Get()
-  findAll(@Req request) {
+  findAll(@Req() request) {
     try {
-      const loggedUser = request.user;
+      const loggedUser = request.user as jwtSchema;
       return this.getAllTasksUseCase.execute({ userId: loggedUser.sub });
     } catch (error) {
       throw new NotFoundException(error);
@@ -34,7 +36,7 @@ export class TasksController {
   @Get(':id')
   findById(@Req() request, @Param('id') taskId: number) {
     try {
-      const loggedUser = request.user;
+      const loggedUser = request.user as jwtSchema;
       return this.getTaskByIdUseCase.execute({
         taskId,
         userId: loggedUser.sub,
@@ -47,7 +49,7 @@ export class TasksController {
   @Post()
   create(@Req() request, @Body() createTaskDTO: CreateTaskDTO) {
     try {
-      const loggedUser = request.user;
+      const loggedUser = request.user as jwtSchema;
       return this.createTaskUseCase.execute({
         task: createTaskDTO,
         userId: loggedUser.sub,
