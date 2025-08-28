@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Get,
+  Inject,
   NotFoundException,
   Param,
   Post,
@@ -14,6 +15,7 @@ import { GetAllTasksService } from 'src/domain/use-cases/tasks/get-all-tasks.ser
 import { GetTaskByIdService } from 'src/domain/use-cases/tasks/get-task-by-id.service';
 import { CreateTaskDTO } from './dtos/create-task.dto';
 import { jwtSchema } from 'src/infrastructure/auth/constants';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Controller('tasks')
 export class TasksController {
@@ -21,13 +23,23 @@ export class TasksController {
     private readonly getAllTasksUseCase: GetAllTasksService,
     private readonly getTaskByIdUseCase: GetTaskByIdService,
     private readonly createTaskUseCase: CreateTaskService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   @Get()
-  findAll(@Req() request) {
+  async findAll(@Req() request) {
     try {
+      const tasksCache = await this.cacheManager.get('tasks');
+      if (tasksCache) {
+        return tasksCache;
+      }
+
       const loggedUser = request.user as jwtSchema;
-      return this.getAllTasksUseCase.execute({ userId: loggedUser.sub });
+      const tasks = await this.getAllTasksUseCase.execute({
+        userId: loggedUser.sub,
+      });
+      await this.cacheManager.set('tasks', tasks);
+      return tasks;
     } catch (error) {
       throw new NotFoundException(error);
     }

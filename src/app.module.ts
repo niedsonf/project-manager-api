@@ -5,9 +5,17 @@ import { DomainModule } from './domain/domain.module';
 import { InfrastructureModule } from './infrastructure/infrastructure.module';
 import { GatewaysModule } from './gateways/gateways.module';
 import { AuthGuard } from './gateways/guards/auth-guard/auth.guard';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
-  imports: [DomainModule, InfrastructureModule, GatewaysModule],
+  imports: [
+    CacheModule.register({
+      isGlobal: true,
+    }),
+    DomainModule,
+    InfrastructureModule,
+    GatewaysModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,

@@ -8,6 +8,7 @@ import {
   Post,
   Req,
   UnprocessableEntityException,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateProjectDTO } from './dtos/create-project.dto';
 import { CreateProjectService } from 'src/domain/use-cases/projects/create-project.service';
@@ -15,6 +16,7 @@ import { GetAllProjectsService } from 'src/domain/use-cases/projects/get-all-pro
 import { GetProjectByIdService } from 'src/domain/use-cases/projects/get-project-by-id.service';
 import { IProject } from 'src/domain/interfaces/project.interface';
 import { jwtSchema } from 'src/infrastructure/auth/constants';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @Controller('projects')
 export class ProjectsController {
@@ -25,6 +27,8 @@ export class ProjectsController {
   ) {}
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(30000)
   findAll(@Req() request): Promise<IProject[]> {
     try {
       const loggedUser = request.user as jwtSchema;
